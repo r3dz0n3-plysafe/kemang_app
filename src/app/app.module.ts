@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { LocationStrategy, PathLocationStrategy, registerLocaleData } from '@angular/common';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppLayoutModule } from './layout/app.layout.module';
@@ -11,12 +11,18 @@ import { EventService } from './demo/service/event.service';
 import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { JsonInterceptor } from "./demo/interceptors/json.interceptor";
+import localeId from '@angular/common/locales/id'; // Import locale Indonesia
+registerLocaleData(localeId, 'id');
 
 @NgModule({
     declarations: [AppComponent, NotfoundComponent],
     imports: [AppRoutingModule, AppLayoutModule],
     providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },
+	    {provide: HTTP_INTERCEPTORS, useClass: JsonInterceptor, multi: true},
+	    {provide: LOCALE_ID, useValue: 'id-ID'},  // Atur locale default menjadi 'id-ID'
         CountryService, CustomerService, EventService, IconService, NodeService,
         PhotoService, ProductService
     ],
