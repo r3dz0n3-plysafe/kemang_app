@@ -16,7 +16,7 @@
             </p-toolbar>
 
             <p-table #dt [value]="currentData" responsiveLayout="scroll"
-                     [lazy]="true" sortField="kmg_check_in" sortMode="multiple" [rows]="10"
+                     [lazy]="true" sortField="kmg_check_in" sortMode="multiple" [sortOrder]="-1" [rows]="10"
                      [paginator]="true" [rowsPerPageOptions]="[10,20,30, {showAll:'All'}]"
                      [showCurrentPageReport]="false" [loading]="loadingTable"
                      [totalRecords]="metadata?.filteredTotal" (onLazyLoad)="loadTableData($event)"
@@ -34,26 +34,54 @@
                     <tr>
                         <th>No</th>
                         <!--                        <th pSortableColumn="kmg_id" class="white-space-nowrap">ID <p-sortIcon field="kmg_id"></p-sortIcon></th>-->
-                        <th pSortableColumn="kmg_floor" class="white-space-nowrap">Lantai
-                            <p-sortIcon field="kmg_floor"></p-sortIcon>
+                        <th pSortableColumn="kmg_floor" class="white-space-nowrap">
+                            <div class="flex align-items-center justify-content-center">
+                                <div>Lantai</div>
+                                <p-sortIcon field="kmg_floor"></p-sortIcon>
+                                <p-columnFilter field="kmg_floor" type="text" display="menu"></p-columnFilter>
+                            </div>
                         </th>
-                        <th pSortableColumn="kmg_unit" class="white-space-nowrap">Unit
-                            <p-sortIcon field="kmg_unit"></p-sortIcon>
+                        <th pSortableColumn="kmg_unit" class="white-space-nowrap">
+                            <div class="flex align-items-center justify-content-center">
+                                <div>Unit</div>
+                                <p-sortIcon field="kmg_unit"></p-sortIcon>
+                                <p-columnFilter field="kmg_unit" type="text" display="menu"></p-columnFilter>
+                            </div>
                         </th>
-                        <th pSortableColumn="kmg_periode" class="white-space-nowrap">Durasi
-                            <p-sortIcon field="kmg_periode"></p-sortIcon>
+                        <th pSortableColumn="kmg_periode" class="white-space-nowrap">
+                            <div class="flex align-items-center justify-content-center">
+                                <div>Durasi</div>
+                                <p-sortIcon field="kmg_periode"></p-sortIcon>
+                                <p-columnFilter field="kmg_periode" type="text" display="menu"></p-columnFilter>
+                            </div>
                         </th>
-                        <th pSortableColumn="kmg_price" class="white-space-nowrap">Harga
-                            <p-sortIcon field="kmg_price"></p-sortIcon>
+                        <th pSortableColumn="kmg_price" class="white-space-nowrap">
+                            <div class="flex align-items-center justify-content-center">
+                                <div>Harga</div>
+                                <p-sortIcon field="kmg_price"></p-sortIcon>
+                                <p-columnFilter field="kmg_price" type="numeric" display="menu"></p-columnFilter>
+                            </div>
                         </th>
-                        <th pSortableColumn="kmg_check_in" class="white-space-nowrap">Jam Check-In
-                            <p-sortIcon field="kmg_check_in"></p-sortIcon>
+                        <th pSortableColumn="kmg_check_in" class="white-space-nowrap">
+                            <div class="flex align-items-center justify-content-center">
+                                <div>Jam Check-In</div>
+                                <p-sortIcon field="kmg_check_in"></p-sortIcon>
+                                <p-columnFilter field="kmg_check_in" type="date" display="menu"></p-columnFilter>
+                            </div>
                         </th>
-                        <th pSortableColumn="kmg_agent" class="white-space-nowrap">Agent
-                            <p-sortIcon field="kmg_agent"></p-sortIcon>
+                        <th pSortableColumn="kmg_agent" class="white-space-nowrap">
+                            <div class="flex align-items-center justify-content-center">
+                                <div>Agent</div>
+                                <p-sortIcon field="kmg_agent"></p-sortIcon>
+                                <p-columnFilter field="kmg_agent" type="text" display="menu"></p-columnFilter>
+                            </div>
                         </th>
-                        <th pSortableColumn="kmg_keterangan" class="white-space-nowrap">Keterangan
-                            <p-sortIcon field="kmg_keterangan"></p-sortIcon>
+                        <th pSortableColumn="kmg_keterangan" class="white-space-nowrap">
+                            <div class="flex align-items-center justify-content-center">
+                                <div>Keterangan</div>
+                                <p-sortIcon field="kmg_keterangan"></p-sortIcon>
+                                <p-columnFilter field="kmg_keterangan" type="text" display="menu"></p-columnFilter>
+                            </div>
                         </th>
                         <th></th>
                     </tr>
@@ -64,19 +92,19 @@
                         <!--<td style="width:14%; min-width:1rem;">
                             {{product.kmg_id}}
                         </td>-->
-                        <td style="width:14%; min-width:1rem;">
+                        <td style="width:14%; max-width:1rem;">
                             {{ product.kmg_floor }}
                         </td>
-                        <td style="width:14%; min-width:1rem;">
+                        <td style="width:14%; max-width:1rem;">
                             {{ product.kmg_unit }}
                         </td>
-                        <td style="width:14%; min-width:10rem;">
+                        <td style="width:14%; max-width:1rem;">
                             {{ product.kmg_periode }} Jam
                         </td>
                         <td style="width:14%; min-width:8rem;" class="white-space-nowrap">
                             {{ product.kmg_price | currency:'IDR': 'Rp. ' }}
                         </td>
-                        <td style="width:14%; min-width:10rem;" class="white-space-nowrap">
+                        <td style="width:14%; min-width:10rem;">
                             {{ product.kmg_check_in | date: 'EEEE, d MMMM Y HH:mm':'UTC' }}
                         </td>
                         <td style="width:14%; min-width:10rem;" class="white-space-nowrap">
@@ -109,7 +137,7 @@
         </div>
 
         <p-dialog *ngIf="productDialog" [(visible)]="productDialog" [style]="{width: '450px'}" (onHide)="hideDialog()"
-                  header="Product Details" [modal]="true" class="p-fluid">
+                  header="Order Details" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
                 <ng-container [formGroup]="formInputSewa">
                     <div class="formgrid grid">
