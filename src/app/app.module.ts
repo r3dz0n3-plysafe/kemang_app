@@ -17,6 +17,7 @@ import localeId from '@angular/common/locales/id';
 import { ErrorInterceptor } from "./demo/interceptors/error.interceptor";
 import { ToastModule } from "primeng/toast";
 import { MessageService } from "primeng/api";
+import { ColumnFilter } from "primeng/table";
 
 registerLocaleData(localeId, 'id');
 
@@ -28,8 +29,14 @@ registerLocaleData(localeId, 'id');
 	    {provide: HTTP_INTERCEPTORS, useClass: JsonInterceptor, multi: true},
 	    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
 	    {provide: LOCALE_ID, useValue: 'id-ID'},  // Atur locale default menjadi 'id-ID'
+	    /*{
+		    provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: {
+			    dateFormat: 'dd MMM yyyy', // default format for dates (can be 'short', 'medium', 'long', etc.)
+			    timezone: 'Asia/Jakarta',        // default timezone
+		    }
+	    },*/
         CountryService, CustomerService, EventService, IconService, NodeService,
-	    PhotoService, ProductService, MessageService
+	    PhotoService, ProductService, MessageService, ColumnFilter
     ],
     bootstrap: [AppComponent],
 })
