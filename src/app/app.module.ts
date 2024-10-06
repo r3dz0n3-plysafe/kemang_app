@@ -13,18 +13,23 @@ import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { JsonInterceptor } from "./demo/interceptors/json.interceptor";
-import localeId from '@angular/common/locales/id'; // Import locale Indonesia
+import localeId from '@angular/common/locales/id';
+import { ErrorInterceptor } from "./demo/interceptors/error.interceptor";
+import { ToastModule } from "primeng/toast";
+import { MessageService } from "primeng/api";
+
 registerLocaleData(localeId, 'id');
 
 @NgModule({
     declarations: [AppComponent, NotfoundComponent],
-    imports: [AppRoutingModule, AppLayoutModule],
+	imports: [AppRoutingModule, AppLayoutModule, ToastModule],
     providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },
 	    {provide: HTTP_INTERCEPTORS, useClass: JsonInterceptor, multi: true},
+	    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
 	    {provide: LOCALE_ID, useValue: 'id-ID'},  // Atur locale default menjadi 'id-ID'
         CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService
+	    PhotoService, ProductService, MessageService
     ],
     bootstrap: [AppComponent],
 })

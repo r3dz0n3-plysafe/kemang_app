@@ -1,7 +1,6 @@
 <div class="grid">
     <div class="col-12">
         <div class="card px-6 py-6">
-            <p-toast></p-toast>
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
                     <div class="my-2">
@@ -16,11 +15,12 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="products" responsiveLayout="scroll" [rows]="10"
-                     [paginator]="true" [rowsPerPageOptions]="[10,20,30]"
-                     [showCurrentPageReport]="true" [loading]="loadingTable"
-                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                     [rowHover]="true" dataKey="id">
+            <p-table #dt [value]="currentData" responsiveLayout="scroll"
+                     [lazy]="true" sortField="kmg_check_in" sortMode="multiple" [rows]="10"
+                     [paginator]="true" [rowsPerPageOptions]="[10,20,30, {showAll:'All'}]"
+                     [showCurrentPageReport]="false" [loading]="loadingTable"
+                     [totalRecords]="metadata?.filteredTotal" (onLazyLoad)="loadTableData($event)"
+                     [rowHover]="true" dataKey="kmg_id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <h5 class="m-0">Manage Units</h5>
@@ -92,6 +92,18 @@
                             </div>
                         </td>
                     </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td [attr.colspan]="9" style="text-align: center;">No data available</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="paginatorleft">
+                    Showing {{ metadata?.firstRow || 0 }} to {{ metadata?.lastRow || 0 }}
+                    of {{ metadata?.filteredTotal || 0 }}
+                    entries<span
+                        *ngIf="metadata?.filteredTotal !== metadata?.total"> (filtered from {{ metadata?.total || 0 }}
+                    total entries)</span>.
                 </ng-template>
             </p-table>
         </div>

@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { Table } from 'primeng/table';
-import { ProductService } from 'src/app/demo/service/product.service';
-import { KemangService } from "../../../service/kemang.service";
+import { Table, TableLazyLoadEvent } from 'primeng/table';
+import { KemangService } from "src/app/demo/service/kemang.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
     templateUrl: './crud.component.html',
-    providers: [MessageService]
 })
 export class CrudComponent implements OnInit {
 
@@ -15,22 +13,22 @@ export class CrudComponent implements OnInit {
 
     deleteProductDialog: boolean = false;
 
-	products: any[] = [];
+	currentData: any[] = [];
 
     submitted: boolean = false;
 
     statuses: any[] = [];
 
-    rowsPerPageOptions = [5, 10, 20];
 	formInputSewa: FormGroup;
 
 	selectedSewaId: any;
 	deleteSewaId: any;
 	btnLoading: boolean;
 	loadingTable: boolean;
+	metadata: any;
+	currentLazyEvent: TableLazyLoadEvent;
 
 	constructor(
-		private productService: ProductService,
 		private messageService: MessageService,
 		private kemangService: KemangService,
 		private fb: FormBuilder,
@@ -38,8 +36,6 @@ export class CrudComponent implements OnInit {
 	}
 
     ngOnInit() {
-	    this.kemangService.getSewa().toPromise().then(data => this.products = data);
-
 	    this.createForm();
     }
 
@@ -82,7 +78,7 @@ export class CrudComponent implements OnInit {
 				    detail: 'Sewa Deleted',
 				    life: 3000
 			    });
-			    this.reloadTable();
+			    this.loadTableData(this.currentLazyEvent);
 			    this.btnLoading = this.deleteProductDialog = false;
 		    },
 		    error: error => {
@@ -111,7 +107,7 @@ export class CrudComponent implements OnInit {
 						    detail: 'Sewa Updated',
 						    life: 3000
 					    });
-					    this.reloadTable();
+					    this.loadTableData(this.currentLazyEvent);
 					    this.hideDialog();
 				    },
 				    error: error => {
@@ -129,7 +125,7 @@ export class CrudComponent implements OnInit {
 						    detail: 'Sewa Created',
 						    life: 3000
 					    });
-					    this.reloadTable();
+					    this.loadTableData(this.currentLazyEvent);
 					    this.hideDialog();
 				    },
 				    error: error => {
@@ -141,24 +137,51 @@ export class CrudComponent implements OnInit {
         }
     }
 
-	reloadTable() {
-		this.loadingTable = true;
-		this.kemangService.getSewa().toPromise().then(data => {
-			this.products = data
-			this.loadingTable = false;
-		});
-	}
-
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
 
 	getSuggestion(field: string) {
-		return this.products.reduce((acc: string[], item: any) => {
+		return this.currentData.reduce((acc: string[], item: any) => {
 			if (!acc.includes(item[field])) {
 				acc.push(item[field]); // Add unique items to the accumulator
 			}
 			return acc;
 		}, []);
+	}
+
+	loadTableData(event: TableLazyLoadEvent) {
+		this.loadingTable = true;
+		this.currentLazyEvent = event;
+
+		const params: any = {
+			page: (event?.first / event?.rows) + 1,
+			perPage: event?.rows,
+			sortField: event?.sortField,
+			sortOrder: event?.sortOrder,
+		};
+
+		if (event?.filters) {
+			const filters = event.filters;
+			if (filters['global']) {
+				params.globalFilter = JSON.stringify(filters['global']);
+			}
+			delete filters['global'];
+
+			params.filters = JSON.stringify(filters);
+		}
+
+		if (event?.multiSortMeta) {
+			params.multiSortMeta = JSON.stringify(event.multiSortMeta);
+		}
+
+		this.kemangService.getSewa(params)
+		.toPromise()
+		.then(res => {
+			this.currentData = res.results.data;
+			this.metadata = res.results.metadata;
+
+			this.loadingTable = false;
+		});
 	}
 }
