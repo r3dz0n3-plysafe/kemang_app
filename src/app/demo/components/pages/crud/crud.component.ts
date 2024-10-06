@@ -50,6 +50,7 @@ export class CrudComponent implements OnInit {
 			'kmg_periode': [null, Validators.required],
 			'kmg_price': [null, Validators.required],
 			'kmg_agent': [null, Validators.required],
+			'kmg_keterangan': [null],
 		})
 	}
 
@@ -153,10 +154,11 @@ export class CrudComponent implements OnInit {
     }
 
 	getSuggestion(field: string) {
-		let data = [];
-		this.products.forEach((item: any) => {
-			data.push(item[field])
-		})
-		return data;
+		return this.products.reduce((acc: string[], item: any) => {
+			if (!acc.includes(item[field])) {
+				acc.push(item[field]); // Add unique items to the accumulator
+			}
+			return acc;
+		}, []);
 	}
 }

@@ -52,6 +52,9 @@
                         <th pSortableColumn="kmg_agent" class="white-space-nowrap">Agent
                             <p-sortIcon field="kmg_agent"></p-sortIcon>
                         </th>
+                        <th pSortableColumn="kmg_keterangan" class="white-space-nowrap">Keterangan
+                            <p-sortIcon field="kmg_keterangan"></p-sortIcon>
+                        </th>
                         <th></th>
                     </tr>
                 </ng-template>
@@ -78,6 +81,9 @@
                         </td>
                         <td style="width:14%; min-width:10rem;" class="white-space-nowrap">
                             {{ product.kmg_agent }}
+                        </td>
+                        <td style="width:14%; min-width:10rem;" class="white-space-nowrap">
+                            {{ product.kmg_keterangan }}
                         </td>
                         <td class="white-space-nowrap">
                             <div class="flex">
@@ -139,11 +145,22 @@
                     <div class="field" *ngIf="formInputSewa.get('kmg_agent') as ctrl">
                         <label for="kmg_agent">Agent</label>
                         <p-autoComplete formControlName="kmg_agent"
-                                        [suggestions]="['Reza', 'Rehan']"
+                                        [suggestions]="getSuggestion('kmg_agent')"
                                         [ngClass]="{'ng-invalid ng-dirty' : submitted && ctrl.invalid}"
                                         appendTo="body"></p-autoComplete>
                         <!--                        <input type="text" pInputText id="kmg_agent" formControlName="kmg_agent" [ngClass]="{'ng-invalid ng-dirty' : submitted && ctrl.invalid}"/>-->
                         <small class="ng-dirty ng-invalid" *ngIf="submitted && ctrl.invalid">Agent is required.</small>
+                    </div>
+                    <div class="field" *ngIf="formInputSewa.get('kmg_keterangan') as ctrl">
+                        <label for="kmg_keterangan">Keterangan</label>
+                        <!--<p-autoComplete formControlName="kmg_keterangan"
+                                        [suggestions]="getSuggestion('kmg_keterangan')"
+                                        [ngClass]="{'ng-invalid ng-dirty' : submitted && ctrl.invalid}"
+                                        appendTo="body"></p-autoComplete>-->
+                        <input type="text" pInputText id="kmg_keterangan" formControlName="kmg_keterangan"
+                               [ngClass]="{'ng-invalid ng-dirty' : submitted && ctrl.invalid}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && ctrl.invalid">Keterangan is
+                            required.</small>
                     </div>
                 </ng-container>
             </ng-template>
